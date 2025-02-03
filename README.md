@@ -470,8 +470,55 @@ public class ParalaxEffect : MonoBehaviour
 
 ### Player
 
-[PlayerController.cs](Scripts/Player/PlayerController.cs)
+- [PlayerController.cs](Scripts/Player/PlayerController.cs)
+
+- [PlayerHealth.cs](Scripts/Player/PlayerHealth.cs)
+
+### Bullet
+
+- [Bullet.cs](Scripts/Player/Bullet.cs)
+
+#### Pooling
+
+- [ObjectPool.cs](Scripts/ObjectPool.cs)
+
+- [BulletPool.cs](Scripts/Player/BulletPool.cs)
 
 ### Enemies
 
+- [EnemyHealth.cs](Scripts/Enemies/EnemyHealth.cs)
+
+#### Crab
+
+- [CrabMovement.cs](Scripts/Enemies/CrabMovement.cs)
+
+#### Octopus
+
+- [OctopusMovement.cs](Scripts/Enemies/OctopusMovement.cs)
+
+#### Jumper
+
+- [JumperMovement.cs](Scripts/Enemies/JumperMovement.cs)
+
+### Managers
+
+- [GameManager.cs](Scripts/Managers/GameManager.cs)
+
+- [EventManager.cs](Scripts/Managers/EventManager.cs)
+
+- [CanvasManager.cs](Scripts/Managers/CanvasManager.cs) : With the canvas manager I display default values to the UI elements.
+
 ### Others
+
+- [CameraNewPart.cs](Scripts/CameraNewPart.cs)
+
+- [ParalaxEffect.cs](Scripts/Utils/ParalaxEffect.cs)
+
+- [DestroyJointCollider.cs](Scripts/Utils/DestroyJointCollider.cs)
+
+- [EnemyJoint.cs](Scripts/Utils/EnemyJoint.cs)
+
+- [CloseGame.cs](Scripts/Utils/CloseGame.cs)
+
+
+
