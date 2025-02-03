@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This project is a 2D game developed in Unity for the subject `Fundamentos del Desarrollo de Videojuegos`. On this game I had the idea to do a metroidvania style game, where the player has to progress through the map and defeat enemies to get to the end of the level. 
+This project is a 2D game developed in Unity for the subject `Fundamentos del Desarrollo de Videojuegos`. 
 
-The game is a 2D platformer similar to the classic Metroid games, where the player has to explore the map and defeat enemies to progress. The player has an armor similar to samus, and can shoot projectiles to defeat enemies. The player can also jump to avoid enemies and obstacles.
+The game is a 2D platformer similar to the classic Metroid games, where the player has to explore the map and defeat enemies to progress. The player has an armor similar to Samus Aran, and can shoot projectiles to defeat enemies. The player can also jump to avoid enemies and obstacles.
 
 ## Entities
 
@@ -331,19 +331,146 @@ The game has a UI that displays the player's health and ammo, the objetives and 
 
 To add bullets to the game, I used a `Bullet Pool` to manage the bullets. The bullet pool is a list of bullets that the player can shoot, and the bullets are reused when the player shoots. This allows the player to shoot multiple bullets without creating new bullets every time. 
 
-The pool has a maximum number of bullets that the player can shoot, and the bullets are reused when the player shoots. The bullets are created when the player shoots, and return to the pool when the bullet collides with an enemy, obstacle or distance. When the limit is reached the player can't shoot anymore.
+The pool has a maximum number of bullets that the player can shoot, and the bullets are reused when the player shoots. The bullets are created when the player shoots, and return to the pool when the bullet collides with an enemy, obstacle or gets to certain distance. When the limit is reached the player can't shoot anymore.
 
-Before creating the class `BulletPool`, I created a class called `ObjectPool` to manage the objects in the pool. Is a generic class that can be used to create pools of any object.
+Before creating the class `BulletPool`, I created a class called `ObjectPool` to manage the objects in the pool. Is a generic class that can be used to create pools of any object. 
 
 ### Events
 
+For the events I used the delegate pattern to create events that the player can subscribe to. The events are used to update the UI when the player collects health or ammo pickups, and to display messages when the player completes an objective or event.
+
+In the class `EventManager` is where I process the events and the messages that the player can receive. For example, when the player collects a health pickup, the event is updated to change the health bar. 
+
+First I declare the delegate and the event in the `PlayerHealth` class:
+
+```csharp
+## PlayerHealth.cs
+
+public int playerHealth = 3;
+public delegate void UpdateHealth(int amount);
+public event UpdateHealth onUpdateHealth;
+private int currentHealth;
+
+private void ModifyHealth(int amount)
+{
+    currentHealth += amount;
+    currentHealth = Mathf.Clamp(currentHealth, 0, playerHealth);
+
+    if (onUpdateHealth != null)
+    {
+        onUpdateHealth(currentHealth);
+    }
+    onUpdateHealth.Invoke(currentHealth);
+}
+
+....
+
+private void Heal()
+{
+    ModifyHealth(1);
+}
+
+....
+
+private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.gameObject.CompareTag("Heal"))
+    {
+        if (currentHealth == playerHealth)
+        {
+            player.InvokeMessage("Ya tienes la vida al máximo");
+            return;
+        }
+        player.InvokeMessage("Te has curado");
+        Heal();
+        Destroy(other.gameObject);
+    }
+}
+```
+
+Later I subscribe to the event in the `EventManager` class:
+
+```csharp
+## EventManager.cs
+public GameObject player;
+public Slider healthSlider;
+
+private PlayerHealth playerHealth;
+
+void Start()
+{
+    playerHealth = player.GetComponent<PlayerHealth>();
+    playerHealth.onUpdateHealth += UpdateHealthCounter;
+}
+
+void UpdateHealthCounter(int Health)
+{
+    healthSlider.value = Health;
+}
+
+....
+
+void OnDestroy()
+{
+    playerHealth.onUpdateHealth -= UpdateHealthCounter;
+}
+```
+
 ### Cinemachine Effects
 
+To add effects to the game, I used the `Cinemachine` package to create a camera that follows the player, to make the game more dynamic. The camera follows the player when the player moves, zoom out when I want to let the player see more of the map and move the camera to some parts of the map to show the player what has changed in the level.
+
+In my game I used the `Cinemachine Virtual Camera` to create the camera that follows the player, and the `Cinemachine Confiner` to limit the camera to the map. 
+
+When the player defeats all the enemies from the first part of the level, the camera moves to the door to the second part of the level, to show the player where to go next. 
+
+> This is shown in the `GameManager` script.
+
+Later on when the player reaches the second part of the level, the camera zooms out to show the player the new obstacles and enemies that the player has to defeat to get to the end of the level. 
+
+> This is shown in the `CameraNewPart` script.
+
+(add gif showing this effects)
+
 ### Background
+
+For the background I used the parallax effect to create the illusion of depth in the game. The background has two layers, the first layer is the background and the second layer is the foreground. The background moves slower than the foreground, creating the illusion of depth.
+
+With the script `ParallaxEffect` I can control the speed of the background and the foreground, and the distance between the layers. The background and foreground move at different speeds, creating the parallax effect and they are constantly moving to create the illusion of depth. 
+
+The speed of the background and foreground can be controlled with the `baseSpeed` and `speedOffset` variables.
+
+```csharp
+public class ParalaxEffect : MonoBehaviour
+{
+    public Vector2 baseSpeed = new Vector2(0.5f, 0.0f);
+    private Material[] Layers;
+    public float speedOffset = 0.1f;
+
+    void Start()
+    {
+        Layers = GetComponent<Renderer>().materials;
+    }
+
+    void Update()
+    {
+        for (int i = 0; i < Layers.Length; i++)
+        {
+            Material m = Layers[i];
+            Vector2 newOffset = m.GetTextureOffset("_MainTex") + baseSpeed * (speedOffset / (i + 1.0f)) * Time.deltaTime;
+            m.SetTextureOffset("_MainTex", newOffset);
+        }
+    }
+}
+```
+
+(add gif showing this effect)
 
 ## Scripts
 
 ### Player
+
+[PlayerController.cs](Scripts/Player/PlayerController.cs)
 
 ### Enemies
 
