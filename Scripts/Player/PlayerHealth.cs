@@ -8,6 +8,7 @@ public class PlayerHealth : MonoBehaviour
 
     public delegate void UpdateHealth(int amount);
     public event UpdateHealth onUpdateHealth;
+    public AudioSource audioSource;
 
     private int currentHealth;
     private PlayerController player;
@@ -39,6 +40,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Damage()
     {
+        audioSource.Play();
         ModifyHealth(-1);
     }
 

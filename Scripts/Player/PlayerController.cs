@@ -6,8 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {  
-    public float speed = 5f; // Velocidad de Movimiento
-    public float thrust = 5f; // Potencia de Salto
+    public float speed = 5f; // Speed of the player
+    public float thrust = 5f; // Jump force
     public GameObject bullet;
     public float bulletSpeed;
     public float fireRate = 0.5f;   // Minimun time between each bullet instantiated
@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
 
     public delegate void DebugMessage(string message);
     public event DebugMessage onMessage;
+
+    public AudioSource ShootAudio;
+    public AudioSource JumpAudio;
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour
         FireBullet();
     }
 
+    // On this method we control the player movement
     private void Movement()
     {
         float moveH = Input.GetAxis("Horizontal");
@@ -42,9 +46,11 @@ public class PlayerController : MonoBehaviour
         {
             rb2D.AddForce(transform.up * thrust, ForceMode2D.Impulse);
             isJumping = true;
+            JumpAudio.Play();
             animator.SetBool("Jump", true);
         }
 
+        // When the player is ducking, it can't move
         if (Input.GetKey(KeyCode.S))
         {
             animator.SetBool("IsDucking", true);
@@ -57,6 +63,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsDucking", false);
         }
 
+        // When the player is shooting up, it can't move
         if (Input.GetKey(KeyCode.W) && !isJumping)
         {
             animator.SetBool("ShootUp", true);
@@ -69,6 +76,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("ShootUp", false);
         }
 
+        // Here I check if the player is moving to control the walking animation
         if (Mathf.Abs(moveH) > 0.01f)
         {
             Vector2 velocity = rb2D.velocity;
@@ -86,12 +94,15 @@ public class PlayerController : MonoBehaviour
         ChangeSpriteOrientation(moveH);
     }
 
+    // On this method we control the player shooting
     private void FireBullet()
     {
         if (Input.GetKey(KeyCode.V)) {
             animator.SetBool("isShooting", true);
             if (Input.GetKeyDown(KeyCode.E) && Time.time >= nextFireTime) {
                 GameObject bullet = BulletSpawner();
+
+                ShootAudio.Play();
 
                 if (bullet == null)
                 {
@@ -119,8 +130,9 @@ public class PlayerController : MonoBehaviour
     private GameObject BulletSpawner() {
         BulletPool pool = FindObjectOfType<BulletPool>();
         GameObject bullet = pool.GetObject();
-        if (bullet != null) // Si hay balas disponibles
+        if (bullet != null) // Checks if the bullet is available
         {
+            // Here we set the position of the bullet
             if (!spriteRenderer.flipX) {
                 if (Input.GetKey(KeyCode.W) && !isJumping)
                     bullet.transform.position = new Vector3(transform.position.x + 0.15f, transform.position.y + 0.5f, transform.position.z);
@@ -148,6 +160,7 @@ public class PlayerController : MonoBehaviour
         return bullet;
     }
 
+    // On this method we change the sprite orientation when the player moves left or right
     private void ChangeSpriteOrientation(float moveH)
     {
         if (moveH > 0)
@@ -160,6 +173,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // On this method we stop the player movement 
     private void StopPlayer()
     {
         Vector2 velocity = rb2D.velocity;
@@ -176,6 +190,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // On this method we check if the player collides with an orb to reload the bullets
     private void OnTriggerEnter2D(Collider2D other)
     {
         BulletPool pool = FindObjectOfType<BulletPool>();

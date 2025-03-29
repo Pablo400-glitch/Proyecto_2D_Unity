@@ -148,9 +148,9 @@ You can find the controllers for the octopus in the `/Assets/Scripts/Enemies` fo
 
 The jumper is the third enemy of the game, and has the following properties:
 
-- Can check if the player is in range of `2.5 units`
+- Can check if the player is in range
 - Can move left or right, following the player if the player is in range
-- Can jump every `2.5 seconds` if the player is in range
+- Can jump every few secons if the player is in range
 - Can damage the player on contact
 
 You can find the controllers for the jumper in the `/Assets/Scripts/Enemies` folder. The jumper has the following scripts:
@@ -430,7 +430,9 @@ Later on when the player reaches the second part of the level, the camera zooms 
 
 > This is shown in the `CameraNewPart` script.
 
-(add gif showing this effects)
+![CameraNewPart](/images/CameraNewPart.gif)
+
+*Figure 11: Camera New Part Gif*
 
 ### Background
 
@@ -464,7 +466,23 @@ public class ParalaxEffect : MonoBehaviour
 }
 ```
 
-(add gif showing this effect)
+Seeing figure 11 we can see the parallax effect in action.
+
+## Sound
+
+For the sound I used the `Audio Source` component to add sound effects to the game. This component allows me to add sound effects to the player's actions like jumping, shooting and taking damage. I also added background music to the game to create a more immersive experience. 
+
+Not only the player has sound effects, but also the enemies. The enemies have sound effects when they die.
+
+For some sounds I add an `Audio Mixer` to control the volume or add other effect to the game sounds or music. With the audio mixer I can change the volume of the sounds, add effects like reverb or echo, allowing me to transform the sounds to create a more immersive experience following the game's theme.
+
+For this game I added the following sound effects to the game:
+
+- `Jump`: The jump sound effect is played when the player jumps. (PlayerController.cs)
+- `Shoot`: The shoot sound effect is played when the player shoots. (PlayerController.cs)
+- `Damage`: The damage sound effect is played when the player takes damage. (PlayerHealth.cs)
+- `EnemyDeath`: The enemy death sound effect is played when the enemies die. (EnemyHealth.cs)
+- `BackgroundMusic`: The background music is played during the game and is looped to create a continuous experience.
 
 ## Scripts
 

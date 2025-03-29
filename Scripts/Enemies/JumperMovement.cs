@@ -24,6 +24,7 @@ public class JumperMovement : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    // Here I check if the player is near the enemy, if so, the enemy moves towards the player jumping if he can
     void Update()
     {
         distanceFromPlayer = Vector3.Distance(transform.position, player.position);
@@ -54,7 +55,7 @@ public class JumperMovement : MonoBehaviour
         }
     }
 
-    // Jump Logic
+    // Jump method that adds an up impulse to the enemy
     void Jump() 
     {
         isJumping = true;
@@ -66,6 +67,7 @@ public class JumperMovement : MonoBehaviour
         rb.velocity = new Vector2(0, rb.velocity.y);       
     }
 
+    // If the enemy collides with the floor, it stops jumping until the cooldown is over
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Floor"))

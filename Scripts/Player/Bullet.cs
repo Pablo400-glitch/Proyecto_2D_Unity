@@ -8,12 +8,12 @@ public class Bullet : MonoBehaviour
 {
     private float maxDistance = 2.5f; 
     private Vector3 startPosition;
-    private BulletPool pool; // Referencia al pool
+    private BulletPool pool; // Pool reference
 
     void Start()
     {
         startPosition = transform.position;
-        pool = FindObjectOfType<BulletPool>(); // Encuentra el pool en la escena
+        pool = FindObjectOfType<BulletPool>(); // Finds the pool in the scene
     }
 
     public void setStartPosition(Vector3 position)
@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour
 
         if (traveledDistance >= maxDistance)
         {
-            pool.ReturnObject(gameObject); // Devuelve la bala al pool
+            pool.ReturnObject(gameObject); // Returns the bullet to the pool
         }
     }
 
@@ -38,12 +38,15 @@ public class Bullet : MonoBehaviour
             EnemyHealth health = collision.GetComponent<EnemyHealth>();
             health.TakeDamage();
         }
+
+        // Checks if the bullet collides with the border of the camera confiner
         if (collision.name != "Border")
         {
+            // Returns the bullet to the pool if it collides with something different than the enemy collider
             if (!collision.gameObject.CompareTag("EnemyCollider"))
             {
                 Debug.Log("Colisión con: " + collision.name);
-                pool.ReturnObject(gameObject); // Devuelve la bala al pool
+                pool.ReturnObject(gameObject);
             }
         }
     }

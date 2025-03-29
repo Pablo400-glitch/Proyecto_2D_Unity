@@ -14,7 +14,7 @@ public class CameraNewPart : MonoBehaviour
     
     void Start()
     {
-        // Obtener el componente CinemachineConfiner2D de la cámara del jugador
+        // Get the CinemachineConfiner2D component from the player camera
         confiner = playerCamera.GetComponent<CinemachineConfiner2D>();
         if (confiner == null)
         {
@@ -26,7 +26,7 @@ public class CameraNewPart : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            // Cambiar el confiner a la nueva área
+            // Change the confiner collider to the new part collider
             if (confiner != null && newPartCollider != null)
             {
                 confiner.m_BoundingShape2D = newPartCollider;

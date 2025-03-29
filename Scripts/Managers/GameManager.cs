@@ -16,16 +16,16 @@ public class GameManager : MonoBehaviour
     public delegate void UpdateObjective(string objective);
     public event UpdateObjective onUpdateObjetive;
 
-    private int remainingEnemies; // Contador de enemigos vivos
+    private int remainingEnemies; // Counter for remaining enemies
 
     void Start()
     {
         invisiblePlatform.SetActive(false);
 
-        // Inicializar el contador de enemigos
+        // Initialize the remaining enemies counter
         remainingEnemies = enemies.Length;
 
-        // Vincular cada enemigo para que notifique al ser destruido
+        // Link each enemy to notify when it is destroyed
         foreach (GameObject enemy in enemies)
         {
             if (enemy != null)
@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Here I control the remaining enemies and trigger the events when the waves are cleared
     public void EnemyDestroyed()
     {
         remainingEnemies--;
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Here I trigger the first wave cleared event
     void TriggerFirstWaveCleared()
     {
         invisiblePlatform.SetActive(true);
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
         onUpdateObjetive?.Invoke("Derrota a los enemigos y encuentra la salida");
     }
 
+    // Here I trigger the second wave cleared event
     void TriggerSecondWaveCleared()
     {
         endLevelCollider.isTrigger = true;

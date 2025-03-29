@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class BulletPool : ObjectPool
 {
-    public int maxBullets = 20; // Máxima cantidad de balas en el inventario
-    private int currentBullets; // Balas disponibles
+    public int maxBullets = 20; // Max Number of bullets
+    private int currentBullets; // Available bullets
 
     public delegate void UpdateAmmo(int amount);
     public event UpdateAmmo onUpdateAmmo;
@@ -12,31 +12,32 @@ public class BulletPool : ObjectPool
     protected override void Start()
     {
         base.Start();
-        currentBullets = maxBullets; // Inicializamos las balas disponibles
+        currentBullets = maxBullets; // Initialize bullets
     }
 
     public override GameObject GetObject()
     {
+        // If there are no bullets available return null
         if (currentBullets <= 0)
         {
             Debug.Log("Sin balas disponibles.");
-            return null; // No permitir disparar si no hay balas
+            return null; 
         }
 
-        GameObject bullet = base.GetObject(); // Obtener una bala del pool
-        currentBullets--; // Reducir del inventario
-        
-        InvokeAmmoEvent(); // Invocar evento de actualización de balas
+        GameObject bullet = base.GetObject(); // Get an available bullet
+        currentBullets--; // Reduce the number of available bullets
 
-        ResetBullet(bullet); // Reiniciar propiedades de la bala
+        InvokeAmmoEvent(); 
+
+        ResetBullet(bullet);
 
         return bullet;
     }
 
     public void Reload(int amount)
     {
-        currentBullets = Mathf.Clamp(currentBullets + amount, 0, maxBullets); // Recargar balas
-        InvokeAmmoEvent(); // Invocar evento de actualización de balas
+        currentBullets = Mathf.Clamp(currentBullets + amount, 0, maxBullets);
+        InvokeAmmoEvent(); 
     }
 
     public int GetAvailableBullets()
@@ -44,19 +45,21 @@ public class BulletPool : ObjectPool
         return currentBullets;
     }
 
+    // Reset the bullet position and velocity
     private void ResetBullet(GameObject bullet)
     {
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = Vector2.zero; // Reiniciar velocidad
-            rb.angularVelocity = 0f; // Reiniciar rotación angular
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f; // Reset Angular velocity
         }
 
-        bullet.transform.position = Vector3.zero; // Reiniciar posición
-        bullet.transform.rotation = Quaternion.identity; // Reiniciar rotación
+        bullet.transform.position = Vector3.zero;
+        bullet.transform.rotation = Quaternion.identity;
     }
 
+    // Here I invoke the event to update the ammo on the UI
     public void InvokeAmmoEvent()
     {
         if (onUpdateAmmo != null)

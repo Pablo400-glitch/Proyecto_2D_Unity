@@ -11,7 +11,7 @@ public class CanvasManager : MonoBehaviour
     public Text currentAmmo;
     private PlayerHealth playerHealth;
 
-    // Start is called before the first frame update
+    // With this method I initialize the canvas elements
     void Start()
     {
         playerHealth = Player.GetComponent<PlayerHealth>();
@@ -19,11 +19,5 @@ public class CanvasManager : MonoBehaviour
         healthSlider.value = healthSlider.maxValue;
         
         currentAmmo.text = bulletPool.maxBullets + " / " + bulletPool.maxBullets;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

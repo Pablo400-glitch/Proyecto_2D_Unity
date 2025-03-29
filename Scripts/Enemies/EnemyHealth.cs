@@ -8,6 +8,7 @@ public class EnemyHealth : MonoBehaviour
     public float maxHealth = 5.0f;
     private GameManager gameManager;
     private float currentHealth;
+    public AudioSource audioSource;
 
     void Start()
     {
@@ -33,7 +34,8 @@ public class EnemyHealth : MonoBehaviour
     {
         if (gameManager != null)
         {
-            gameManager.EnemyDestroyed(); // Notificar al GameManager
+            audioSource.Play();
+            gameManager.EnemyDestroyed(); // Notify the GameManager that this enemy was destroyed
         }
     }
 }
