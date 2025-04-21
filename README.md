@@ -484,6 +484,10 @@ For this game I added the following sound effects to the game:
 - `EnemyDeath`: The enemy death sound effect is played when the enemies die. (EnemyHealth.cs)
 - `BackgroundMusic`: The background music is played during the game and is looped to create a continuous experience.
 
+## Animations
+
+I added animations to each game entity to make the gameplay more dynamic and engaging. For the player character, I implemented animations for idle, walking, jumping, shooting, ducking, and taking damage. For the enemies, I included animations for idle and either movement or jumping, depending on their behavior.
+
 ## Scripts
 
 ### Player
