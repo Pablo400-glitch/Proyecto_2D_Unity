@@ -542,5 +542,11 @@ I added animations to each game entity to make the gameplay more dynamic and eng
 
 - [CloseGame.cs](Scripts/Utils/CloseGame.cs)
 
+## Links
+
+[Project](https://drive.google.com/file/d/1ftQVUFua8sU4yjLhD6IyIGqMbM28eI04/view?usp=sharing)
+
+[Video](https://drive.google.com/file/d/14TAZkojLA8gPMUMKS-J1uM3KMdzKklHf/view?usp=sharing)
+
 
 
